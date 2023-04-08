@@ -1,0 +1,20 @@
+{
+  "name": "a-web-scrapper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Awais Ul Hassan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/awais-519/A-Web-Scrapper/issues"
+  },
+  "homepage": "https://github.com/awais-519/A-Web-Scrapper#readme",
+  "dependencies": {
+    "axios": "^1.3.5",
+    "cheerio": "^1.0.0-rc.12",
+    "express": "^4.17.1"
+  }
+}
