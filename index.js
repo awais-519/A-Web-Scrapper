@@ -18,6 +18,7 @@ const newspapers = [
 ];
 
 const articles = [];
+const specifiedArticle = [];
 
 newspapers.forEach((news) => {
 	axios(news.url).then((resp) => {
@@ -37,6 +38,25 @@ app.get('/news', (req, res) => {
 	res.json(articles);
 });
 
+app.get('/news/:source', (req, res) => {
+	const requiredNewspaper = newspapers.filter(
+		(source) => source.name === req.params.source
+	)[0];
+
+	axios(requiredNewspaper.url).then((res) => {
+		const html = res.data;
+		const $ = cheerio.load(html);
+
+		$('a:contains("climate")').each(function () {
+			const headline = $(this).text();
+			const url = $(this).attr('href');
+
+			specifiedArticle.push({ headline, url });
+		});
+	});
+	res.json(specifiedArticle);
+});
+
 app.get('/', (req, res) => {
-	return res.json('SUCCESSFLUL GETting HIT');
+	return res.json('Welcome to Climate News');
 });
