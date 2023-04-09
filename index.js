@@ -2,22 +2,41 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const express = require('express');
 
-const PORT = '6969';
+const PORT = '1234';
 const app = express();
-app.listen(PORT, () => console.log(` SERVERS RUNNING ON ${PORT}`));
+app.listen(PORT, () => console.log(`SERVERS RUNNING ON ${PORT}`));
+
+const newspapers = [
+	{
+		name: 'guardian',
+		url: 'https://www.theguardian.com/international',
+	},
+	{
+		name: 'times',
+		url: 'https://www.thetimes.co.uk',
+	},
+];
 
 const articles = [];
 
-axios('https://www.theguardian.com/international').then((resp) => {
-	const html = resp.data;
-	const $ = cheerio.load(html);
+newspapers.forEach((news) => {
+	axios(news.url).then((resp) => {
+		const html = resp.data;
+		const $ = cheerio.load(html);
 
-	$('.fc-item__title', html).each(function () {
-		const title = $(this).text();
-		const url = $(this).find('a').attr('href');
+		$('a:contains("climate")', html).each(function () {
+			const headline = $(this).text();
+			const url = $(this).attr('href');
 
-		articles.push({ title, url });
+			articles.push({ headline, url, source: news.name });
+		});
 	});
+});
 
-	console.log(articles);
+app.get('/news', (req, res) => {
+	res.json(articles);
+});
+
+app.get('/', (req, res) => {
+	return res.json('SUCCESSFLUL GETting HIT');
 });
