@@ -9,11 +9,18 @@ app.listen(PORT, () => console.log(`SERVERS RUNNING ON ${PORT}`));
 const newspapers = [
 	{
 		name: 'guardian',
-		url: 'https://www.theguardian.com/international',
+		url: 'https://www.theguardian.com/environment/climate-crisis',
+		base: '',
 	},
 	{
 		name: 'times',
-		url: 'https://www.thetimes.co.uk',
+		url: 'https://www.thetimes.co.uk/environment/climate-change',
+		base: '',
+	},
+	{
+		name: 'telegraph',
+		url: 'https://www.telegraph.co.uk/climate-change',
+		base: 'https://www.telegraph.co.uk',
 	},
 ];
 
@@ -29,7 +36,7 @@ newspapers.forEach((news) => {
 			const headline = $(this).text();
 			const url = $(this).attr('href');
 
-			articles.push({ headline, url, source: news.name });
+			articles.push({ headline, url: news.base + url, source: news.name });
 		});
 	});
 });
@@ -51,7 +58,7 @@ app.get('/news/:source', (req, res) => {
 			const headline = $(this).text();
 			const url = $(this).attr('href');
 
-			specifiedArticle.push({ headline, url });
+			specifiedArticle.push({ headline, url: requiredNewspaper.base + url });
 		});
 	});
 	res.json(specifiedArticle);
